@@ -1,0 +1,25 @@
+{
+  "name": "back-end-sistema-de-cobranca-equipe-localhost071",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VhHonorato/back-end-sistema-de-cobranca---equipe-localhost071.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VhHonorato/back-end-sistema-de-cobranca---equipe-localhost071/issues"
+  },
+  "homepage": "https://github.com/VhHonorato/back-end-sistema-de-cobranca---equipe-localhost071#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "lodash": "^4.17.21",
+    "nodemon": "^2.0.13"
+  }
+}
