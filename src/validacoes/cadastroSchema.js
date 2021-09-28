@@ -16,7 +16,18 @@ const cadastroSchema = yup.object().shape({
     .required()
 });
 
+const loginSchema = yup.object().shape({
+    email: yup
+    .string()
+    .email()
+    .required(),
+
+    senha: yup
+    .string()
+    .required()
+})
+
 // const usuarioSchema = yup.object().when({
 //     email: yup.boolean().when(false)
 // })
-module.exports = {cadastroSchema};
+module.exports = {cadastroSchema, loginSchema};
