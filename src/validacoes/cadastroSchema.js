@@ -1,7 +1,7 @@
 const yup = require('./yup');
 
 const cadastroSchema = yup.object().shape({
-    nomeUsuario: yup
+    nome: yup
     .string()
     .required(),
     
@@ -16,4 +16,7 @@ const cadastroSchema = yup.object().shape({
     .required()
 });
 
-module.exports = cadastroSchema;
+const usuarioSchema = yup.object().when({
+    email: yup.boolean().when(false)
+})
+module.exports = {cadastroSchema, usuarioSchema};

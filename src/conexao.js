@@ -4,7 +4,7 @@ const knex = require('knex')({
         host: 'localhost',
         user: 'postgres',
         password: 'jsm1183',
-        database: 'sistema_cobranca_localhost:071'
+        database: 'sistema_cobranca_localhost071'
     }
 });
 
