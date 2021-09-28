@@ -1,6 +1,6 @@
 const knex = require('../conexao');
 const bcrypt = require('bcrypt');
-const {cadastroSchema, usuarioSchema} = require('../validacoes/cadastroSchema');
+const {cadastroSchema} = require('../validacoes/cadastroSchema');
 
 
 const cadastrarUsuario = async (req, res) => {
@@ -10,7 +10,7 @@ const cadastrarUsuario = async (req, res) => {
         await cadastroSchema.validate(req.body);
 
         const seExisteUsuario = await knex('usuarios').where({email}).first().debug();
-        await usuarioSchema.validate(seExisteUsuario)
+        // await usuarioSchema.validate(seExisteUsuario)
 //Como usar o yup para validar seExisteUsuario?
         if(seExisteUsuario){
             return res.status(400).json('O email informado já foi cadastrado.')
