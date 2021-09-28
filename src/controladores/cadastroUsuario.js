@@ -33,6 +33,11 @@ const cadastrarUsuario = async (req, res) => {
     }
 
 }
+
+const exibirCadastro = async (req, res) => {
+    return res.status(200).json(req.usuario);
+}
 module.exports = {
-    cadastrarUsuario
+    cadastrarUsuario,
+    exibirCadastro
 }
