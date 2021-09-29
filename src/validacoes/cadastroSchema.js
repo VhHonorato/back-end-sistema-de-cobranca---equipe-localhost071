@@ -25,9 +25,32 @@ const loginSchema = yup.object().shape({
     senha: yup
     .string()
     .required()
-})
+});
+
+const atualizarCadastroSchema = yup.object().shape({
+    nome: yup
+    .string()
+    .required(),
+    
+    email: yup
+    .string()
+    .email()
+    .required(),
+
+    senha: yup
+    .string()
+    .min(5),
+
+    cpf: yup
+    .string()
+    .min(11),
+
+    telefone: yup
+    .string()
+    
+});
 
 // const usuarioSchema = yup.object().when({
 //     email: yup.boolean().when(false)
 // })
-module.exports = {cadastroSchema, loginSchema};
+module.exports = {cadastroSchema, loginSchema, atualizarCadastroSchema};
