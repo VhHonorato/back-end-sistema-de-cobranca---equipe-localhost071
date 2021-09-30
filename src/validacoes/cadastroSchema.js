@@ -38,8 +38,8 @@ const atualizarCadastroSchema = yup.object().shape({
     .required(),
 
     senha: yup
-    .string()
-    .min(5),
+    .string(),
+    
 
     cpf: yup
     .string()

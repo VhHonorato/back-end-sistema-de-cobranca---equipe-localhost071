@@ -57,13 +57,16 @@ const atualizarCadastro = async (req, res) => {
         if(emailJaCadastrado.email != req.usuario.email){
             return res.status(400).json('Email ja foi cadastrado anteriormente.')
         }
-        const cadastroAtualizado = await knex('usuarios').where({id}).update({
+        const atualizandoCadastro = { 
             nome,
             email,
-            senha: senhaCriptografada,
-            cpf,
-            telefone           
-        });
+            cpf: cpf || req.usuario.cpf,
+            telefone: telefone || req.usuario.telefone }
+            if(senha){
+                const senhaCriptografada = await bcrypt.hash(senha,10);
+                atualizandoCadastro.senha = senhaCriptografada
+            }
+        const cadastroAtualizado = await knex('usuarios').where({id}).update(atualizandoCadastro);
         
         if(!cadastroAtualizado) {
             return res.status(400).json('Não foi possível atualizar o cadastro')
