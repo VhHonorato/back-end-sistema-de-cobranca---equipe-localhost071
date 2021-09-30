@@ -10,7 +10,7 @@ rotas.post('/login', loginUsuario.loginUsuario);
 
 rotas.use(verificaLogin);
 
-
 rotas.get('/cadastro', cadastrarUsuario.exibirCadastro);
+rotas.put('/cadastro', cadastrarUsuario.atualizarCadastro);
 
 module.exports = rotas;
