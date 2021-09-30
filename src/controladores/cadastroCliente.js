@@ -23,7 +23,8 @@ const cadastrarCliente = async (req, res) => {
      
         if(seExisteCliente){
             return res.status(400).json('O cliente informado já foi cadastrado.')
-        }
+        };
+
         const cadastrandoCliente = {
             nome,
             email,
