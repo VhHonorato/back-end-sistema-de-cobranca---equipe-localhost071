@@ -41,7 +41,7 @@ const cadastrarCliente = async (req, res) => {
         const queryInserirCliente = await knex('clientes').insert(cadastrandoCliente);
 
         if(!queryInserirCliente){
-            return res.status(400).json('Não foi possível cadastrar o usuário.')
+            return res.status(400).json('Desculpe, não foi possível cadastrar o usuário.')
         }
 
         return res.status(200).json('Cliente cadastrado com sucesso.')
