@@ -15,7 +15,10 @@ const knex = require('knex')({
         port : 5432,
         user : 'rcthgtcijgsglm',
         password : '814e04ce09bbccb47135938c3499047924af77928173e2fc500322c03e032723',
-        database : 'devek15gco18hq'
+        database : 'devek15gco18hq',
+        ssl: {
+            rejectUnauthorized : false
+        }
     }
 });
 
