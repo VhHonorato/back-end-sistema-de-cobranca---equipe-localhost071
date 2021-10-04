@@ -53,7 +53,7 @@ const atualizarCadastro = async (req, res) => {
         
         const emailJaCadastrado = await knex('usuarios').where({email}).first().debug();
         
-        if(emailJaCadastrado.email != req.usuario.email){
+        if(emailJaCadastrado){
             return res.status(400).json('Email ja foi cadastrado anteriormente.')
         }
         const atualizandoCadastro = { 
