@@ -19,7 +19,7 @@ const cadastrarCliente = async (req, res) => {
     try {
         await cadastroClienteSchema.validate(req.body);
 
-        const seExisteCliente = await knex('clientes').where({cpf}).first().debug();
+        const seExisteCliente = await knex('clientes').where({email}).first().debug();
      
         if(seExisteCliente){
             return res.status(400).json('O cliente informado já foi cadastrado.')
