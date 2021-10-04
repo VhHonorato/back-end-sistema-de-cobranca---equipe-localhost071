@@ -65,7 +65,6 @@ const cadastroClienteSchema = yup.object().shape({
 
     cpf: yup
     .string()
-    .min(11)
     .required(),
 
     telefone: yup
