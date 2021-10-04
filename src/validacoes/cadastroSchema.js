@@ -41,8 +41,8 @@ const atualizarCadastroSchema = yup.object().shape({
     .string(),
 
     cpf: yup
-    .string()
-    .min(11),
+    .string(),
+    
 
     telefone: yup
     .string()
