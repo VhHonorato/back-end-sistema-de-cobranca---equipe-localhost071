@@ -7,7 +7,7 @@ create table usuarios (
   	senha text,
   	cpf type char(11) unique,
   	telefone text
-  	
+  	alter table usuarios alter column cpf type text; 
 );
 
 
@@ -26,6 +26,7 @@ create table clientes (
 	cidade text,
 	estado text,
   	foreign key (usuario_id) references usuarios (id)
+	  alter table clientes alter column cpf type text; 
 );
 
 
