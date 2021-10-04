@@ -50,7 +50,7 @@ const atualizarCadastro = async (req, res) => {
     
     try {
         await atualizarCadastroSchema.validate(req.body);
-        const senhaCriptografada = await bcrypt.hash(senha,10);
+        
         const emailJaCadastrado = await knex('usuarios').where({email}).first().debug();
         
         if(emailJaCadastrado.email != req.usuario.email){
