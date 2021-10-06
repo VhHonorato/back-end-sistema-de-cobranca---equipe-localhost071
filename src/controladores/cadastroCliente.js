@@ -25,6 +25,12 @@ const cadastrarCliente = async (req, res) => {
             return res.status(400).json('O cliente informado já foi cadastrado.')
         };
 
+        const seExisteCpf = await knex('clientes').where({cpf}).first().debug();
+     
+        if(seExisteCpf){
+            return res.status(400).json('O CPF informado já foi cadastrado.')
+        };
+
         const cadastrandoCliente = {
             nome,
             email,
