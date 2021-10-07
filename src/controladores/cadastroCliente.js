@@ -1,5 +1,5 @@
 const knex = require('../conexao');
-const {cadastroClienteSchema} = require('../validacoes/cadastroSchema');
+const {cadastroClienteSchema, atualizarCadastroClienteSchema} = require('../validacoes/cadastroSchema');
 
 
 const cadastrarCliente = async (req, res) => {
@@ -74,7 +74,7 @@ const atualizarCadastroCliente = async (req, res) => {
     const {id} = req.usuario;
     
     try {
-        await atualizarCadastroClienteSchema .validate(req.body);
+        await atualizarCadastroClienteSchema.validate(req.body);
         
         const emailJaCadastrado = await knex('clientes').where({email}).first().debug();
         
