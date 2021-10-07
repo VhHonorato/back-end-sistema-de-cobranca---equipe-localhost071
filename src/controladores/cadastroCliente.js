@@ -76,17 +76,16 @@ const atualizarCadastroCliente = async (req, res) => {
     try {
         await atualizarCadastroClienteSchema.validate(req.body);
 
-        // const dadosCliente = await knex.select('*').from('clientes').debug()
         
-        const emailJaCadastrado = await knex('clientes').where({email}).first().debug();
+        const emailJaCadastrado = await knex('clientes').where({email}).first();
         
-        if(emailJaCadastrado && emailJaCadastrado.id !== id) {
+        if(emailJaCadastrado && emailJaCadastrado.id !== Number(id)) {
             return res.status(400).json('Email ja foi cadastrado anteriormente.')
         }
 
-        const seExisteCpf = await knex('clientes').where({cpf}).first().debug();
-
-        if(seExisteCpf && seExisteCpf.id !== id) {
+        const seExisteCpf = await knex('clientes').where({cpf}).first();
+        
+        if(seExisteCpf && seExisteCpf.id !== Number(id)) {
             return res.status(400).json('CPF ja foi cadastrado anteriormente.')
         }
         const atualizandoCadastroClientes = { 
