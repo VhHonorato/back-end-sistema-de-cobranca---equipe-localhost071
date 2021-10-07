@@ -114,5 +114,7 @@ const atualizarCadastroCliente = async (req, res) => {
 }
 
 module.exports = {
-    cadastrarCliente
+    cadastrarCliente,
+    atualizarCadastroCliente
+
 }
