@@ -90,15 +90,19 @@ const atualizarCadastroCliente = async (req, res) => {
         const atualizandoCadastroClientes = { 
             nome,
             email,
-            cpf: cpf || req.usuario.cpf,
-            telefone: telefone || req.usuario.telefone }
-            if(senha){
-                const senhaCriptografada = await bcrypt.hash(senha,10);
-                atualizandoCadastro.senha = senhaCriptografada
-            }
-        const cadastroAtualizado = await knex('usuarios').where({id}).update(atualizandoCadastro);
+            cpf,
+            telefone,
+            cep,
+            logradouro, 
+            complemento, 
+            bairro, 
+            cidade, 
+            estado
+        }
+           
+        const cadastroClienteAtualizado = await knex('usuarios').where({id}).update(atualizandoCadastroClientes);
         
-        if(!cadastroAtualizado) {
+        if(!cadastroClienteAtualizado) {
             return res.status(400).json('Não foi possível atualizar o cadastro')
         }
 
