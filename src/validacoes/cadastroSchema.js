@@ -49,6 +49,7 @@ const atualizarCadastroSchema = yup.object().shape({
     
 });
 
+
 const cadastroClienteSchema = yup.object().shape({
     nome: yup
     .string()
@@ -90,4 +91,47 @@ const cadastroClienteSchema = yup.object().shape({
     // .string()
 });
 
-module.exports = {cadastroSchema, loginSchema, atualizarCadastroSchema, cadastroClienteSchema};
+const atualizarCadastroClienteSchema = yup.object().shape({
+    nome: yup
+    .string()
+    .required(),
+    
+    email: yup
+    .string()
+    .email()
+    .required(),
+
+    telefone: yup
+    .string()
+    .required(),
+
+    cpf: yup
+    .string()
+    .required(),
+
+    cep: yup
+    .string(),
+
+	logradouro: yup
+    .string(),
+
+	complemento: yup
+    .string(),
+
+	bairro: yup
+    .string(),
+
+	cidade: yup
+    .string(),
+
+	estado: yup
+    .string()
+});
+
+module.exports = {
+    cadastroSchema, 
+    loginSchema, 
+    atualizarCadastroSchema, 
+    cadastroClienteSchema, 
+    atualizarCadastroClienteSchema
+};

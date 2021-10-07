@@ -57,6 +57,64 @@ const cadastrarCliente = async (req, res) => {
 
 }
 
+const atualizarCadastroCliente = async (req, res) => {
+    let {
+        nome, 
+        email,
+        cpf,
+        telefone,
+        cep,
+        logradouro, 
+        complemento, 
+        bairro, 
+        cidade, 
+        estado
+    } = req.body;
+
+    const {id} = req.usuario;
+    
+    try {
+        await atualizarCadastroSchema.validate(req.body);
+        
+        const emailJaCadastrado = await knex('clientes').where({email}).first().debug();
+        
+        if(emailJaCadastrado && emailJaCadastrado.id !== id) {
+            return res.status(400).json('Email ja foi cadastrado anteriormente.')
+        }
+
+        const seExisteCpf = await knex('clientes').where({cpf}).first().debug();
+
+        if(seExisteCpf && seExisteCpf.id !== id) {
+            return res.status(400).json('CPF ja foi cadastrado anteriormente.')
+        }
+        const atualizandoCadastroClientes = { 
+            nome,
+            email,
+            cpf,
+            telefone,
+            cep,
+            logradouro, 
+            complemento, 
+            bairro, 
+            cidade, 
+            estado
+        }
+           
+        const cadastroClienteAtualizado = await knex('usuarios').where({id}).update(atualizandoCadastroClientes);
+        
+        if(!cadastroClienteAtualizado) {
+            return res.status(400).json('Não foi possível atualizar o cadastro')
+        }
+
+        return res.status(200).json('Cadastro atualizado com sucesso.')
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+
+}
+
 module.exports = {
-    cadastrarCliente
+    cadastrarCliente,
+    atualizarCadastroCliente
+
 }
