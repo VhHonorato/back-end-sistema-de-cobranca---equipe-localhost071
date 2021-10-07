@@ -70,11 +70,13 @@ const atualizarCadastroCliente = async (req, res) => {
         cidade, 
         estado
     } = req.body;
-
-    const {id} = req.usuario;
+    const {id} = req.params;
+  
     
     try {
         await atualizarCadastroClienteSchema.validate(req.body);
+
+        // const dadosCliente = await knex.select('*').from('clientes').debug()
         
         const emailJaCadastrado = await knex('clientes').where({email}).first().debug();
         
@@ -99,8 +101,9 @@ const atualizarCadastroCliente = async (req, res) => {
             cidade, 
             estado
         }
-           
-        const cadastroClienteAtualizado = await knex('usuarios').where({id}).update(atualizandoCadastroClientes);
+
+      
+        const cadastroClienteAtualizado = await knex('clientes').where({id}).update(atualizandoCadastroClientes);
         
         if(!cadastroClienteAtualizado) {
             return res.status(400).json('Não foi possível atualizar o cadastro')

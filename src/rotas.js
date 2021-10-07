@@ -14,7 +14,7 @@ rotas.get("/cadastro", cadastrarUsuario.exibirCadastro);
 rotas.put("/cadastro", cadastrarUsuario.atualizarCadastro);
 
 rotas.post("/usuario/cadastro", cadastrarCliente.cadastrarCliente);
-rotas.put("/usuario/cadastro", cadastrarCliente.atualizarCadastroCliente);
+rotas.put("/usuario/cadastro/:id", cadastrarCliente.atualizarCadastroCliente);
 
 
 module.exports = rotas;
