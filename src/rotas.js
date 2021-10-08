@@ -13,8 +13,8 @@ rotas.use(verificaLogin);
 rotas.get("/cadastro", cadastrarUsuario.exibirCadastro);
 rotas.put("/cadastro", cadastrarUsuario.atualizarCadastro);
 
-rotas.post("/usuario/cadastro", cadastrarCliente.cadastrarCliente);
-rotas.put("/usuario/cadastro/:id", cadastrarCliente.atualizarCadastroCliente);
-
+rotas.post("/cliente/cadastro", cadastrarCliente.cadastrarCliente);
+rotas.put("/cliente/cadastro/:id", cadastrarCliente.atualizarCadastroCliente);
+rotas.get("/cliente/:id", cadastrarCliente.exibirCadastroCliente)
 
 module.exports = rotas;
