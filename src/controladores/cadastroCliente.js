@@ -104,6 +104,7 @@ const atualizarCadastroCliente = async (req, res) => {
       
         const cadastroClienteAtualizado = await knex('clientes').where({id}).update(atualizandoCadastroClientes);
         
+
         if(!cadastroClienteAtualizado) {
             return res.status(400).json('Não foi possível atualizar o cadastro')
         }
@@ -115,8 +116,21 @@ const atualizarCadastroCliente = async (req, res) => {
 
 }
 
+const exibirCadastroCliente = async (req, res) => {
+    const {id} = req.params;
+    const dadosCliente = await knex('clientes').where({id}).first()
+    const exibirDadosCliente = {
+        nome: dadosCliente.nome,
+        email: dadosCliente.email,
+        telefone: dadosCliente.telefone,
+    };
+    return res.status(200).json(exibirDadosCliente);
+
+}
+
 module.exports = {
     cadastrarCliente,
-    atualizarCadastroCliente
+    atualizarCadastroCliente,
+    exibirCadastroCliente
 
 }
