@@ -13,7 +13,7 @@ try {
 
     const {id} = jwt.verify(token, senhaHash);
 
-    const usuarioAutorizado = await knex('usuarios').where({id}).first().debug();
+    const usuarioAutorizado = await knex('usuarios').where({id}).first();
 
     if(!usuarioAutorizado) {
         return res.status(400).json('Token inválido.');

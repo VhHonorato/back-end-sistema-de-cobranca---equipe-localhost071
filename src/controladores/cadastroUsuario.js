@@ -9,7 +9,7 @@ const cadastrarUsuario = async (req, res) => {
     try {
         await cadastroSchema.validate(req.body);
 
-        const seExisteUsuario = await knex('usuarios').where({email}).first().debug();
+        const seExisteUsuario = await knex('usuarios').where({email}).first();
      
         if(seExisteUsuario){
             return res.status(400).json('O email informado já foi cadastrado.')
@@ -51,7 +51,7 @@ const atualizarCadastro = async (req, res) => {
     try {
         await atualizarCadastroSchema.validate(req.body);
         
-        const emailJaCadastrado = await knex('usuarios').where({email}).first().debug();
+        const emailJaCadastrado = await knex('usuarios').where({email}).first();
         
         if(emailJaCadastrado && emailJaCadastrado.id !== id) {
             return res.status(400).json('Email ja foi cadastrado anteriormente.')
