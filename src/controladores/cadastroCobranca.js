@@ -55,6 +55,12 @@ const cadastrarCobranca = async (req, res) => {
 const detalharCliente = async (req, res) => {
     const {id} = req.params;
     try {
+        const seExisteId = await knex('clientes').where({id}).first();
+        console.log(seExisteId);
+        if(!seExisteId) {
+            return res.status(404).json('Cliente não encontrado.');
+        }
+
         const detalhesDoCliente = await knex.select('*').from('cobrancas')
         .fullOuterJoin('clientes', 'clientes.id', 'cobrancas.cliente_id')
         .where({id});
