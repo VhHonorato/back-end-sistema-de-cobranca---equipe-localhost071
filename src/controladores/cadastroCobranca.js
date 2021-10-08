@@ -60,7 +60,7 @@ const detalharCliente = async (req, res) => {
         .where({id});
 
         if(!detalhesDoCliente){
-           return res.status(400).json('Não foi possivel detalhar o dados do cliente.');
+           return res.status(400).json('Não foi possivel detalhar os dados do cliente.');
         }
 
         return res.status(200).json(detalhesDoCliente);

@@ -118,13 +118,11 @@ const atualizarCadastroCliente = async (req, res) => {
 
 const exibirCadastroCliente = async (req, res) => {
     const {id} = req.usuario;
-    const dadosCliente = await knex('clientes').where({usuario_id: id}).first()
-    const exibirDadosCliente = {
-        nome: dadosCliente.nome,
-        email: dadosCliente.email,
-        telefone: dadosCliente.telefone,
-    };
-    return res.status(200).json(exibirDadosCliente);
+
+    const exibirDados = await knex.select('*').from('clientes')
+    .leftJoin('cobrancas', 'cobrancas.cliente_id', 'clientes.id').where({usuario_id:id});
+    
+    return res.status(200).json(exibirDados);
 
 }
 
