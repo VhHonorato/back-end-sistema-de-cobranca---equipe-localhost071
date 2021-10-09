@@ -1,21 +1,6 @@
 const knex = require('../conexao');
 const {cadastroCobrancaSchema} = require('../validacoes/cadastroSchema');
 
-const listaClientes = async (req, res) => {
-    const {id} = req.usuario;
-    try {
-        const listarNomeClientes = await knex('clientes').where({usuario_id: id});
-        if(!listarNomeClientes){
-            return res.status(400).json('Desculpe, não foi possível exibir os clientes. Favor verificar as credênciais do usuário.')
-        }
-
-        res.status(200).json(listarNomeClientes);
-    } catch (error) {
-        return res.status(400).json(error.message);
-    }
-   
-
-}
 
 const cadastrarCobranca = async (req, res) => {
     const {
@@ -52,24 +37,17 @@ const cadastrarCobranca = async (req, res) => {
     }
 
 }
-const detalharCliente = async (req, res) => {
-    const {id} = req.params;
+const todosClientes = async (req, res) => {
+    const {id} = req.usuario;
     try {
-        const seExisteId = await knex('clientes').where({id}).first();
-        console.log(seExisteId);
-        if(!seExisteId) {
-            return res.status(404).json('Cliente não encontrado.');
+        console.log(id);
+        const dadosDoCliente = await knex.select('clientes').where({usuario_id: id}).first();
+        
+        if(!dadosDoCliente){
+           return res.status(400).json('Não foi possivel exibir os  cliente.');
         }
 
-        const detalhesDoCliente = await knex.select('*').from('cobrancas')
-        .fullOuterJoin('clientes', 'clientes.id', 'cobrancas.cliente_id')
-        .where({id});
-
-        if(!detalhesDoCliente){
-           return res.status(400).json('Não foi possivel detalhar os dados do cliente.');
-        }
-
-        return res.status(200).json(detalhesDoCliente);
+        return res.status(200).json(dadosDoCliente);
     } catch (error) {
         return res.status(400).json(error.message);
     }
@@ -77,6 +55,5 @@ const detalharCliente = async (req, res) => {
 
 module.exports = {
     cadastrarCobranca,
-    listaClientes,
-    detalharCliente
+    todosClientes 
 }
