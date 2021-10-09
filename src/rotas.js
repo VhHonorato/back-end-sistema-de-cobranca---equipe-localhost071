@@ -16,10 +16,11 @@ rotas.put("/cadastro", cadastrarUsuario.atualizarCadastro);
 
 rotas.post("/cliente/cadastro", cadastrarCliente.cadastrarCliente);
 rotas.put("/cliente/cadastro/:id", cadastrarCliente.atualizarCadastroCliente);
-rotas.get("/cliente", cadastrarCliente.exibirCadastroCliente);
+rotas.get("/cliente", cadastrarCliente.listarClientes);
+rotas.get("/cliente/:id", cadastrarCliente.detalharCliente)
 
 
 rotas.post("/cliente/cobranca/:id", cadastrarCobranca.cadastrarCobranca);
-rotas.get("/cliente/cobranca", cadastrarCobranca.listaClientes);
-rotas.get("/cliente/cobranca/:id", cadastrarCobranca.detalharCliente);
+rotas.get("/cliente/dados", cadastrarCobranca.todosClientes);
+
 module.exports = rotas;
