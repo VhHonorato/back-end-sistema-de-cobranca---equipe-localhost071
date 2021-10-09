@@ -21,6 +21,6 @@ rotas.get("/cliente/:id", cadastrarCliente.detalharCliente)
 
 
 rotas.post("/cliente/cobranca/:id", cadastrarCobranca.cadastrarCobranca);
-
+rotas.get("/cliente/cobranca", cadastrarCobranca.listarCobranca)
 
 module.exports = rotas;

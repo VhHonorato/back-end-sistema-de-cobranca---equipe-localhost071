@@ -60,35 +60,31 @@ const cadastroClienteSchema = yup.object().shape({
     .email()
     .required(),
 
-    // telefone: yup
-    // .string()
-    // .required(),
+    telefone: yup
+    .string()
+    .required(),
 
-    // cpf: yup
-    // .string()
-    // .required(),
+    cpf: yup
+    .string()
+    .required(),
 
-    // telefone: yup
-    // .string()
-    // .required(),
+    cep: yup
+    .string(),
 
-    // cep: yup
-    // .string(),
+	logradouro: yup
+    .string(),
 
-	// logradouro: yup
-    // .string(),
+	complemento: yup
+    .string(),
 
-	// complemento: yup
-    // .string(),
+	bairro: yup
+    .string(),
 
-	// bairro: yup
-    // .string(),
+	cidade: yup
+    .string(),
 
-	// cidade: yup
-    // .string(),
-
-	// estado: yup
-    // .string()
+	estado: yup
+    .string()
 });
 
 const atualizarCadastroClienteSchema = yup.object().shape({

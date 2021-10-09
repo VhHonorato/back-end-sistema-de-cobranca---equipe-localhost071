@@ -20,13 +20,13 @@ const cadastrarCliente = async (req, res) => {
         await cadastroClienteSchema.validate(req.body);
 
         const seExisteCliente = await knex('clientes').where({email}).first();
-     
+        
         if(seExisteCliente){
             return res.status(400).json('O cliente informado já foi cadastrado.')
         };
 
         const seExisteCpf = await knex('clientes').where({cpf}).first();
-     
+        console.log(seExisteCpf);
         if(seExisteCpf){
             return res.status(400).json('O CPF informado já foi cadastrado.')
         };
@@ -76,9 +76,13 @@ const atualizarCadastroCliente = async (req, res) => {
     try {
         await atualizarCadastroClienteSchema.validate(req.body);
 
+        const seExisteCliente = await knex('clientes').where({id}).first();
         
+        if(!seExisteCliente){
+            return res.status(404).json('Não existe cliente cadastrado com essas credenciais');
+        }
         const emailJaCadastrado = await knex('clientes').where({email}).first();
-        console.log(emailJaCadastrado);
+        
         if(emailJaCadastrado && emailJaCadastrado.id !== Number(id)) {
             return res.status(400).json('Email ja foi cadastrado anteriormente.')
         }

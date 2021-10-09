@@ -40,8 +40,26 @@ const cadastrarCobranca = async (req, res) => {
 
 }
 
+const listarCobranca = async (req, res) => {
+    const {id} = req.usuario;
+    try {
+       
+        const listaDeCobrancas = await knex.select('*').from('clientes')
+        .fullOuterJoin('cobrncas', 'cobranca.cliente_id', 'cliente.id')
+        .where({usuario_id: id});
+
+        if(!listaDeCobrancas){
+           return res.status(400).json('Não foi possivel listar as cobranças dos clientes');
+        }
+
+        return res.status(200).json(listaDeCobrancas);
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+    
+}
 
 module.exports = {
     cadastrarCobranca,
-    
+    listarCobranca
 }
