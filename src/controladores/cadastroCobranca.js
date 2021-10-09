@@ -11,6 +11,7 @@ const cadastrarCobranca = async (req, res) => {
     } = req.body;
     const {id} = req.params;
     try {
+       
         await cadastroCobrancaSchema.validate(req.body);
 
         const selecionarCliente = await knex('clientes').where({id}).first();
@@ -18,6 +19,7 @@ const cadastrarCobranca = async (req, res) => {
         if(!selecionarCliente){
             return res.status(404).json('Não foi possível selecionar o cliente para realizar o cadastro da cobrança. Verifique as credênciais do cliente');
         }
+     
         const cadastrandoCobranca = {
             cliente_id: selecionarCliente.id,
             descricao,
@@ -37,23 +39,9 @@ const cadastrarCobranca = async (req, res) => {
     }
 
 }
-const todosClientes = async (req, res) => {
-    const {id} = req.usuario;
-    try {
-        console.log(id);
-        const dadosDoCliente = await knex.select('clientes').where({usuario_id: id}).first();
-        
-        if(!dadosDoCliente){
-           return res.status(400).json('Não foi possivel exibir os  cliente.');
-        }
 
-        return res.status(200).json(dadosDoCliente);
-    } catch (error) {
-        return res.status(400).json(error.message);
-    }
-}
 
 module.exports = {
     cadastrarCobranca,
-    todosClientes 
+    
 }
