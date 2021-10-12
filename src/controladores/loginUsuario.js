@@ -12,7 +12,7 @@ const loginUsuario = async (req, res) => {
 
         const cadastroUsuario = await knex('usuarios').where({email}).first();
         if(!cadastroUsuario){
-            return res.status(404).json('O cadastro do usuário não foi encontrado.');
+            return res.status(400).json('O cadastro do usuário não foi encontrado.');
         }
 
         const senhaCorreta = await bcrypt.compare(senha, cadastroUsuario.senha);

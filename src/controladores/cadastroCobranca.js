@@ -11,7 +11,7 @@ const cadastrarCobranca = async (req, res) => {
 
     if (!selecionarCliente) {
       return res
-        .status(404)
+        .status(400)
         .json(
           "Não foi possível selecionar o cliente para realizar o cadastro da cobrança. Verifique as credênciais do cliente"
         );

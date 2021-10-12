@@ -79,7 +79,7 @@ const atualizarCadastroCliente = async (req, res) => {
         const seExisteCliente = await knex('clientes').where({id}).first();
         
         if(!seExisteCliente){
-            return res.status(404).json('Não existe cliente cadastrado com essas credenciais');
+            return res.status(400).json('Não existe cliente cadastrado com essas credenciais');
         }
         const emailJaCadastrado = await knex('clientes').where({email}).first();
         
@@ -176,7 +176,7 @@ const detalharCliente = async (req, res) => {
         const seExisteId = await knex('clientes').where({id}).first();
         console.log(seExisteId);
         if(!seExisteId) {
-            return res.status(404).json('Cliente não encontrado.');
+            return res.status(400).json('Cliente não encontrado.');
         }
 
         const detalhesDoCliente = await knex.select('*').from('cobrancas')
