@@ -33,7 +33,15 @@ const cadastrarCobranca = async (req, res) => {
         .status(400)
         .json("Desculpe, não foi possível cadastrar a cobrança.");
     }
-
+    let dataAtual = new Date();
+    let dataVencimento = new Date(vencimento);
+    const validandoVencimeto = dataAtual.getTime() >= dataVencimento.getTime();
+    if(validandoVencimeto) {
+      return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
+    };
+    console.log(dataAtual);
+    console.log(dataVencimento);
+    console.log(validandoVencimeto);
     return res.status(200).json("Cobranca cadastrada com sucesso.");
   } catch (error) {
     return res.status(400).json(error.message);
@@ -51,12 +59,12 @@ const listarCobranca = async (req, res) => {
       .fullOuterJoin("cobrancas", "cobrancas.cliente_id", "clientes.id")
       .where({ usuario_id: id });
 
-    if (!listaDeCobrancas) {
+    if (listaDeCobrancas.id_cobranca == null) {
       return res
         .status(400)
         .json("Não foi possivel listar as cobranças dos clientes");
     }
-
+    console.log(listaDeCobrancas.id_cobranca);
     return res.status(200).json(listaDeCobrancas);
   } catch (error) {
     return res.status(400).json(error.message);
