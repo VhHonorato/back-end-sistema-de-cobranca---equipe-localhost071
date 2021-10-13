@@ -171,28 +171,42 @@ const listarClientes = async (req, res) => {
 }
 
 const detalharCliente = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     try {
-        const seExisteId = await knex('clientes').where({id}).first();
-        console.log(seExisteId);
-        if(!seExisteId) {
-            return res.status(400).json('Cliente não encontrado.');
-        }
-
-        const detalhesDoCliente = await knex.select('*').from('cobrancas')
-        .fullOuterJoin('clientes', 'clientes.id', 'cobrancas.cliente_id')
-        .where({id});
-
-        if(!detalhesDoCliente){
-           return res.status(400).json('Não foi possivel detalhar os dados do cliente.');
-        }
-
-        return res.status(200).json(detalhesDoCliente);
+      const seExisteId = await knex("clientes").where({ id }).first();
+      console.log(seExisteId);
+      if (!seExisteId) {
+        return res.status(404).json("Cliente não encontrado.");
+      }
+  
+      let detalhesDoCliente = await knex
+        .select("*")
+        .from("clientes")
+        // .fullOuterJoin("clientes", "clientes.id", "cobrancas.cliente_id")
+        .where({ id });
+  
+      if (!detalhesDoCliente) {
+        return res
+          .status(400)
+          .json("Não foi possivel detalhar os dados do cliente.");
+      }
+      
+      const detalhesCobranca = await knex("cobrancas").where({ cliente_id:id });
+      if (!detalhesCobranca) {
+        return res
+          .status(400)
+          .json("Não foi possivel detalhar os dados do cliente.");
+      }
+     detalhesDoCliente = {
+          ...detalhesDoCliente[0],
+          cobrancas: detalhesCobranca
+      }
+      return res.status(200).json(detalhesDoCliente);
     } catch (error) {
-        return res.status(400).json(error.message);
+      return res.status(400).json(error.message);
     }
-}
-
+  };
+  
 module.exports = {
     cadastrarCliente,
     atualizarCadastroCliente,

@@ -42,12 +42,13 @@ const cadastrarCobranca = async (req, res) => {
 
 const listarCobranca = async (req, res) => {
   const { id } = req.usuario;
+
+  console.log(id);
   try {
     const listaDeCobrancas = await knex
       .select("*")
       .from("clientes")
       .fullOuterJoin("cobrancas", "cobrancas.cliente_id", "clientes.id")
-      .toString()
       .where({ usuario_id: id });
 
     if (!listaDeCobrancas) {
