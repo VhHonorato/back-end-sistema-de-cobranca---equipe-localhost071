@@ -47,6 +47,7 @@ const listarCobranca = async (req, res) => {
       .select("*")
       .from("clientes")
       .fullOuterJoin("cobrancas", "cobrancas.cliente_id", "clientes.id")
+      .toString()
       .where({ usuario_id: id });
 
     if (!listaDeCobrancas) {
