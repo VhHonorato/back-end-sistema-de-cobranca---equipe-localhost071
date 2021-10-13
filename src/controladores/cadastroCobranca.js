@@ -16,12 +16,12 @@ const cadastrarCobranca = async (req, res) => {
           "Não foi possível selecionar o cliente para realizar o cadastro da cobrança. Verifique as credênciais do cliente"
         );
     }
-
+    const valorAjustado = valor * 100; 
     const cadastrandoCobranca = {
       cliente_id: selecionarCliente.id,
       descricao,
       status,
-      valor,
+      valor: valorAjustado,
       vencimento,
     };
     const queryInserirCobranca = await knex("cobrancas").insert(
