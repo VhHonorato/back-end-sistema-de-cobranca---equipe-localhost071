@@ -24,6 +24,17 @@ const cadastrarCobranca = async (req, res) => {
       valor: valorAjustado,
       vencimento,
     };
+
+    // let dataAtual = new Date();
+    // let dataVencimento = new Date(vencimento);
+    // const validandoVencimeto = dataAtual.getTime() < dataVencimento.getTime();
+    // console.log(dataAtual);
+    // console.log(dataVencimento);
+    // console.log(validandoVencimeto);
+    // if(!validandoVencimeto) {
+    //   return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
+    // };
+
     const queryInserirCobranca = await knex("cobrancas").insert(
       cadastrandoCobranca
     );
@@ -33,15 +44,7 @@ const cadastrarCobranca = async (req, res) => {
         .status(400)
         .json("Desculpe, não foi possível cadastrar a cobrança.");
     }
-    let dataAtual = new Date();
-    let dataVencimento = new Date(vencimento);
-    const validandoVencimeto = dataAtual.getTime() >= dataVencimento.getTime();
-    if(validandoVencimeto) {
-      return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
-    };
-    console.log(dataAtual);
-    console.log(dataVencimento);
-    console.log(validandoVencimeto);
+    
     return res.status(200).json("Cobranca cadastrada com sucesso.");
   } catch (error) {
     return res.status(400).json(error.message);

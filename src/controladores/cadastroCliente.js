@@ -71,11 +71,19 @@ const atualizarCadastroCliente = async (req, res) => {
         estado
     } = req.body;
     const {id} = req.params;
-  
+    const {id: id_usuario} = req.usuario;
     
     try {
         await atualizarCadastroClienteSchema.validate(req.body);
+        
+      
+        const seUsuarioLogado = await knex('clientes').where({id}).first();
+        
 
+        if(seUsuarioLogado.usuario_id != id_usuario){
+            return res.status(400).json('Usuario não tem permissão para editar esse cliente.');
+        }
+       
         const seExisteCliente = await knex('clientes').where({id}).first();
         
         if(!seExisteCliente){
@@ -120,15 +128,6 @@ const atualizarCadastroCliente = async (req, res) => {
 
 }
 
-// const exibirCadastroCliente = async (req, res) => {
-//     const {id} = req.usuario;
-
-//     const exibirDados = await knex.select('*').from('clientes')
-//     .leftJoin('cobrancas', 'cobrancas.cliente_id', 'clientes.id').where({usuario_id:id});
-    
-//     return res.status(200).json(exibirDados);
-
-// }
 const listarClientes = async (req, res) => {
     const {id} = req.usuario;
     try {
