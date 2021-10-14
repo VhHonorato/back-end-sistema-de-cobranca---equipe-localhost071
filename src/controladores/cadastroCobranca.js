@@ -1,8 +1,7 @@
 const knex = require("../conexao");
 const { cadastroCobrancaSchema } = require("../validacoes/cadastroSchema");
-// const isBefore = require('date-fns/isBefore');
-// const parseISO = require('date-fns/parseISO');
-
+const { isAfter, isBefore, parseISO } = require("date-fns");
+const {utcToZonedTime} = require("date-fns-tz");
 const cadastrarCobranca = async (req, res) => {
   const { descricao, status, valor, vencimento } = req.body;
   const { id } = req.params;
@@ -27,16 +26,23 @@ const cadastrarCobranca = async (req, res) => {
       vencimento,
     };
 
-    let dataAtual = new Date();
-    let dataVencimento = new Date(vencimento);
-    const validandoVencimeto = dataAtual.valueOf() < dataVencimento.valueOf();
-    console.log(dataAtual);
-    console.log(dataVencimento);
+    const validandoVencimeto = isAfter(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(vencimento));
+    console.log(vencimento);
+    console.log(utcToZonedTime(new Date(), 'America/Sao_Paulo'));
     console.log(validandoVencimeto);
-    if(dataAtual.valueOf() > dataVencimento.valueOf()) {
-
+    if(validandoVencimeto){
       return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
-    };
+    }
+    // let dataAtual = new Date();
+    // let dataVencimento = new Date(vencimento);
+    // const validandoVencimeto = dataAtual.valueOf() < dataVencimento.valueOf();
+    // console.log(dataAtual);
+    // console.log(dataVencimento);
+    // console.log(validandoVencimeto);
+    // if(dataAtual.valueOf() > dataVencimento.valueOf()) {
+
+    //   return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
+    // };
    
 
     const queryInserirCobranca = await knex("cobrancas").insert(
