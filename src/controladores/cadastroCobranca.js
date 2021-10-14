@@ -113,42 +113,25 @@ const editarCobranca = async (req, res) => {
 
       if(verificarUsuarioLogado.usuario_id != id_usuario){
           return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
-      }
-     
+      }   
       
-      const emailJaCadastrado = await knex('clientes').where({email}).first();
-      
-      if(emailJaCadastrado && emailJaCadastrado.id !== Number(id)) {
-          return res.status(400).json('Email ja foi cadastrado anteriormente.')
-      }
-
-      const seExisteCpf = await knex('clientes').where({cpf}).first();
-      
-      if(seExisteCpf && seExisteCpf.id !== Number(id)) {
-          return res.status(400).json('CPF ja foi cadastrado anteriormente.')
-      }
-      const atualizandoCadastroClientes = { 
-          nome,
-          email,
-          cpf,
-          telefone,
-          cep,
-          logradouro, 
-          complemento, 
-          bairro, 
-          cidade, 
-          estado
+  
+      const editandoCobranca = { 
+        cliente_id,
+        descricao,
+        status,
+        valor
       }
 
     
-      const cadastroClienteAtualizado = await knex('clientes').where({id}).update(atualizandoCadastroClientes);
+      const combrancaEditada = await knex('cobrancas').where({id_cobranca}).update(editandoCobranca);
       
 
-      if(!cadastroClienteAtualizado) {
-          return res.status(400).json('Não foi possível atualizar o cadastro')
+      if(!combrancaEditada) {
+          return res.status(400).json('Não foi possível editar a cobrança.')
       }
 
-      return res.status(200).json('Cadastro atualizado com sucesso.')
+      return res.status(200).json('Cobrança atualizada com sucesso.')
   } catch (error) {
       return res.status(400).json(error.message);
   }
