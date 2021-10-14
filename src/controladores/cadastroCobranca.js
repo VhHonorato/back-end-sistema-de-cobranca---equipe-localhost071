@@ -1,7 +1,9 @@
 const knex = require("../conexao");
-const { cadastroCobrancaSchema } = require("../validacoes/cadastroSchema");
+const { cadastroCobrancaSchema, editarCobrancaSchema } = require("../validacoes/cadastroSchema");
 const { isAfter, isBefore, parseISO } = require("date-fns");
 const {utcToZonedTime} = require("date-fns-tz");
+
+
 const cadastrarCobranca = async (req, res) => {
   const { descricao, status, valor, vencimento } = req.body;
   const { id } = req.params;
@@ -88,7 +90,73 @@ const listarCobranca = async (req, res) => {
   }
 };
 
+const editarCobranca = async (req, res) => {
+  let {
+    cliente_id,
+    descricao,
+    status,
+    valor
+  } = req.body;
+  const {id_cobranca} = req.params;
+  const {id: id_usuario} = req.usuario;
+  
+  try {
+      await editarCobrancaSchema.validate(req.body);
+      
+    
+      const verificarClienteId = await knex('cobrancas').where({id_cobranca}).first();
+      const verificarUsuarioLogado = await knex('clientes').where(verificarClienteId.cliente_id).first();
+      
+      if(!verificarUsuarioLogado){
+        return res.status(400).json('Não existe cliente cadastrado com essas credenciais');
+    }
+
+      if(verificarUsuarioLogado.usuario_id != id_usuario){
+          return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
+      }
+     
+      
+      const emailJaCadastrado = await knex('clientes').where({email}).first();
+      
+      if(emailJaCadastrado && emailJaCadastrado.id !== Number(id)) {
+          return res.status(400).json('Email ja foi cadastrado anteriormente.')
+      }
+
+      const seExisteCpf = await knex('clientes').where({cpf}).first();
+      
+      if(seExisteCpf && seExisteCpf.id !== Number(id)) {
+          return res.status(400).json('CPF ja foi cadastrado anteriormente.')
+      }
+      const atualizandoCadastroClientes = { 
+          nome,
+          email,
+          cpf,
+          telefone,
+          cep,
+          logradouro, 
+          complemento, 
+          bairro, 
+          cidade, 
+          estado
+      }
+
+    
+      const cadastroClienteAtualizado = await knex('clientes').where({id}).update(atualizandoCadastroClientes);
+      
+
+      if(!cadastroClienteAtualizado) {
+          return res.status(400).json('Não foi possível atualizar o cadastro')
+      }
+
+      return res.status(200).json('Cadastro atualizado com sucesso.')
+  } catch (error) {
+      return res.status(400).json(error.message);
+  }
+
+}
+
 module.exports = {
   cadastrarCobranca,
   listarCobranca,
+  editarCobranca
 };

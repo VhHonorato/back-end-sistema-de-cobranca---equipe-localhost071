@@ -147,11 +147,33 @@ const cadastroCobrancaSchema = yup.object().shape({
     .required()
 });
 
+const editarCobrancaSchema = yup.object().shape({
+    descricao: yup
+    .string()
+    .required(),
+    
+    status: yup
+    .string()
+    .required(),
+
+    valor: yup
+    .string()
+    .required(),
+
+    descricao: yup
+    .string()
+    .required(),
+
+    vencimento: yup
+    .date()
+    .required()
+})
 module.exports = {
     cadastroSchema, 
     loginSchema, 
     atualizarCadastroSchema, 
     cadastroClienteSchema, 
     atualizarCadastroClienteSchema,
-    cadastroCobrancaSchema
+    cadastroCobrancaSchema,
+    editarCobrancaSchema
 };
