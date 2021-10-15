@@ -1,7 +1,8 @@
 const knex = require("../conexao");
-const { cadastroCobrancaSchema } = require("../validacoes/cadastroSchema");
-// const isBefore = require('date-fns/isBefore');
-// const parseISO = require('date-fns/parseISO');
+const { cadastroCobrancaSchema, editarCobrancaSchema } = require("../validacoes/cadastroSchema");
+const { isAfter, isBefore, parseISO } = require("date-fns");
+const {utcToZonedTime} = require("date-fns-tz");
+
 
 const cadastrarCobranca = async (req, res) => {
   const { descricao, status, valor, vencimento } = req.body;
@@ -27,16 +28,23 @@ const cadastrarCobranca = async (req, res) => {
       vencimento,
     };
 
-    let dataAtual = new Date();
-    let dataVencimento = new Date(vencimento);
-    const validandoVencimeto = dataAtual.valueOf() < dataVencimento.valueOf();
-    console.log(dataAtual);
-    console.log(dataVencimento);
+    const validandoVencimeto = isAfter(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(vencimento));
+    console.log(vencimento);
+    console.log(utcToZonedTime(new Date(), 'America/Sao_Paulo'));
     console.log(validandoVencimeto);
-    if(dataAtual.valueOf() > dataVencimento.valueOf()) {
-
+    if(validandoVencimeto){
       return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
-    };
+    }
+    // let dataAtual = new Date();
+    // let dataVencimento = new Date(vencimento);
+    // const validandoVencimeto = dataAtual.valueOf() < dataVencimento.valueOf();
+    // console.log(dataAtual);
+    // console.log(dataVencimento);
+    // console.log(validandoVencimeto);
+    // if(dataAtual.valueOf() > dataVencimento.valueOf()) {
+
+    //   return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
+    // };
    
 
     const queryInserirCobranca = await knex("cobrancas").insert(
@@ -82,7 +90,60 @@ const listarCobranca = async (req, res) => {
   }
 };
 
+const editarCobranca = async (req, res) => {
+  let {
+    cliente_id,
+    descricao,
+    status,
+    vencimento,
+    valor
+  } = req.body;
+  const {id_cobranca} = req.params;
+  const {id: id_usuario} = req.usuario;
+  
+  try {
+      await editarCobrancaSchema.validate(req.body);
+      
+    
+      const verificarClienteId = await knex('cobrancas').where({id_cobranca}).first();
+  
+      const clienteId = verificarClienteId.cliente_id;
+      if(clienteId != cliente_id){
+        return res.status(400).json('Essa cobrança não pertence ao cliente selecionado')
+      }
+      console.log(clienteId);
+      const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
+
+      if(verificarUsuarioLogado.usuario_id != id_usuario){
+          return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
+      }   
+      
+  
+      const editandoCobranca = { 
+        cliente_id,
+        descricao,
+        status,
+        vencimento,
+        valor
+      }
+
+    
+      const combrancaEditada = await knex('cobrancas').where({id_cobranca}).update(editandoCobranca);
+      
+
+      if(!combrancaEditada) {
+          return res.status(400).json('Não foi possível editar a cobrança.')
+      }
+
+      return res.status(200).json('Cobrança atualizada com sucesso.')
+  } catch (error) {
+      return res.status(400).json(error.message);
+  }
+
+}
+
 module.exports = {
   cadastrarCobranca,
   listarCobranca,
+  editarCobranca
 };
