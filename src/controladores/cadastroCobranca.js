@@ -150,18 +150,22 @@ const excluirCobranca = async (req, res) => {
   try {
     const verificarClienteId = await knex('cobrancas').where({id_cobranca}).first();
     
+    if(!verificarClienteId){
+      return res.status(400).json('Cobrança não encontrada')
+    }
+
     const clienteId = verificarClienteId.cliente_id;
     const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
       console.log(verificarUsuarioLogado);
       console.log(id_usuario);
       if(verificarUsuarioLogado.usuario_id != id_usuario){
-          return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
+          return res.status(400).json('Usuario não tem permissão para excluir essa cobrança.');
       }   
   
       const verificarCobranca = await knex('cobrancas').where({id_cobranca}).first();
     
       if(verificarCobranca.status = true){
-        return res.status(400).json('Não é possível excluir cobrança com status pago')
+        return res.status(400).json('Não é possível excluir cobranças com status pago')
       }
       
       const validandoVencimeto = isBefore(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(verificarCobranca.vencimento));
@@ -169,6 +173,14 @@ const excluirCobranca = async (req, res) => {
       if(!validandoVencimeto){
         return res.status(400).json('Não é possível excluir cobranças com data de vencimento anterior a data atual.')
       }
+
+      const excluindoCobranca = await knex('cobrancas').del().where({id_cobranca}).first();
+
+      if(!excluindoCobranca){
+        return res.status(400).json('Não é possível excluir a cobrança')
+      }
+      return res.status(200).json('Cobrança excluída com sucesso.');
+
   } catch (error) {
     return res.status(400).json(error.message);
   }
