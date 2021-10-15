@@ -1,7 +1,7 @@
 const knex = require("../conexao");
 const { cadastroCobrancaSchema, editarCobrancaSchema } = require("../validacoes/cadastroSchema");
-const { isAfter, isBefore, parseISO } = require("date-fns");
-const {utcToZonedTime} = require("date-fns-tz");
+const { isAfter, isBefore, parseISO, isToday, isTomorrow } = require("date-fns");
+const {utcToZonedTime, zonedTimeToUtc} = require("date-fns-tz");
 
 
 const cadastrarCobranca = async (req, res) => {
@@ -28,11 +28,30 @@ const cadastrarCobranca = async (req, res) => {
       vencimento,
     };
 
-    const validandoVencimeto = isAfter(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(vencimento));
-    console.log(vencimento);
-    console.log(utcToZonedTime(new Date(), 'America/Sao_Paulo'));
-    console.log(validandoVencimeto);
-    if(validandoVencimeto){
+  //     Date.prototype.withoutTime = function () {
+  //     var d = new Date(batatinha);
+  //     d.setHours(0, 0, 0, 0);
+  //     return d;
+  // }
+    // const data1 = new Date(vencimento);
+    // const data2 = new Date().toDateString();
+    // const validandoVencimeto = data1 < data2;
+    
+    // const validandoVencimeto = isAfter(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(vencimento));
+ 
+   
+
+    
+      const dataHoje = new Date();
+      const timeZone = 'America/Sao_Paulo';
+      const utcDataHoje = utcToZonedTime(dataHoje, timeZone);
+      const utcVencimento = utcToZonedTime(new Date(vencimento), timeZone);
+      console.log(utcDataHoje);
+      console.log(utcVencimento);
+
+     
+
+    if(utcVencimento < utcDataHoje){
       return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
     }
     // let dataAtual = new Date();
@@ -108,9 +127,7 @@ const editarCobranca = async (req, res) => {
       const verificarClienteId = await knex('cobrancas').where({id_cobranca}).first();
   
       const clienteId = verificarClienteId.cliente_id;
-      // if(clienteId != cliente_id){
-      //   return res.status(400).json('Essa cobrança não pertence ao cliente selecionado')
-      // }
+   
      
       const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
       console.log(verificarUsuarioLogado);
@@ -156,25 +173,33 @@ const excluirCobranca = async (req, res) => {
 
     const clienteId = verificarClienteId.cliente_id;
     const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
-      console.log(verificarUsuarioLogado);
-      console.log(id_usuario);
+      
       if(verificarUsuarioLogado.usuario_id != id_usuario){
           return res.status(400).json('Usuario não tem permissão para excluir essa cobrança.');
       }   
   
       const verificarCobranca = await knex('cobrancas').where({id_cobranca}).first();
     
-      if(verificarCobranca.status = true){
+      if(verificarCobranca.status === true){
         return res.status(400).json('Não é possível excluir cobranças com status pago')
       }
-      
-      const validandoVencimeto = isBefore(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(verificarCobranca.vencimento));
 
-      if(!validandoVencimeto){
+      // const dataVencimento = verificarCobranca.vencimento;
+      // const validandoVencimeto = isBefore(new Date(dataVencimento), utcToZonedTime(new Date(), 'America/Sao_Paulo'));
+      // console.log(new Date(dataVencimento), utcToZonedTime(new Date(), 'America/Sao_Paulo'));
+      
+      const utcVencimento = zonedTimeToUtc(new Date(vencimento), 'America/Sao_Paulo');
+      const dataHoje = new Date();
+      const timeZone = 'America/Sao_Paulo';
+      const utcDataHoje = utcToZonedTime(dataHoje, timeZone);
+      console.log(utcDataHoje);
+      console.log(utcVencimento);
+
+      if(utcVencimento < utcDataHoje){
         return res.status(400).json('Não é possível excluir cobranças com data de vencimento anterior a data atual.')
       }
 
-      const excluindoCobranca = await knex('cobrancas').del().where({id_cobranca}).first();
+      const excluindoCobranca = await knex('cobrancas').del().where({id_cobranca});
 
       if(!excluindoCobranca){
         return res.status(400).json('Não é possível excluir a cobrança')
