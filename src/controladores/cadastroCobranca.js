@@ -158,8 +158,17 @@ const excluirCobranca = async (req, res) => {
           return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
       }   
   
+      const verificarCobranca = await knex('cobrancas').where({id_cobranca}).first();
     
-    
+      if(verificarCobranca.status = true){
+        return res.status(400).json('Não é possível excluir cobrança com status pago')
+      }
+      
+      const validandoVencimeto = isBefore(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(verificarCobranca.vencimento));
+
+      if(!validandoVencimeto){
+        return res.status(400).json('Não é possível excluir cobranças com data de vencimento anterior a data atual.')
+      }
   } catch (error) {
     return res.status(400).json(error.message);
   }
