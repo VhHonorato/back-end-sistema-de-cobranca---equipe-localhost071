@@ -22,7 +22,7 @@ rotas.get("/cliente/:id", cadastrarCliente.detalharCliente)
 
 rotas.post("/cliente/cobranca/:id", cadastrarCobranca.cadastrarCobranca);
 rotas.get("/cobrancas", cadastrarCobranca.listarCobranca);
-rotas.put("/cobrancas/:cobranca_id", cadastrarCobranca.editarCobranca);
+rotas.put("/cobrancas/:id_cobranca", cadastrarCobranca.editarCobranca);
 
 
 module.exports = rotas;

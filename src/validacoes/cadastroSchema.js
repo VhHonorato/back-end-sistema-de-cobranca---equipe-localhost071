@@ -148,7 +148,7 @@ const cadastroCobrancaSchema = yup.object().shape({
 });
 
 const editarCobrancaSchema = yup.object().shape({
-    descricao: yup
+    cliente_id: yup
     .string()
     .required(),
     

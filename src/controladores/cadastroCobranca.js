@@ -95,6 +95,7 @@ const editarCobranca = async (req, res) => {
     cliente_id,
     descricao,
     status,
+    vencimento,
     valor
   } = req.body;
   const {id_cobranca} = req.params;
@@ -105,11 +106,13 @@ const editarCobranca = async (req, res) => {
       
     
       const verificarClienteId = await knex('cobrancas').where({id_cobranca}).first();
-      const verificarUsuarioLogado = await knex('clientes').where(verificarClienteId.cliente_id).first();
-      
-      if(!verificarUsuarioLogado){
-        return res.status(400).json('Não existe cliente cadastrado com essas credenciais');
-    }
+  
+      const clienteId = verificarClienteId.cliente_id;
+      if(clienteId != cliente_id){
+        return res.status(400).json('Essa cobrança não pertence ao cliente selecionado')
+      }
+      console.log(clienteId);
+      const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
 
       if(verificarUsuarioLogado.usuario_id != id_usuario){
           return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
@@ -120,6 +123,7 @@ const editarCobranca = async (req, res) => {
         cliente_id,
         descricao,
         status,
+        vencimento,
         valor
       }
 
