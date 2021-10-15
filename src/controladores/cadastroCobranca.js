@@ -111,7 +111,7 @@ const editarCobranca = async (req, res) => {
       if(clienteId != cliente_id){
         return res.status(400).json('Essa cobrança não pertence ao cliente selecionado')
       }
-      console.log(clienteId);
+     
       const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
 
       if(verificarUsuarioLogado.usuario_id != id_usuario){
