@@ -143,6 +143,29 @@ const editarCobranca = async (req, res) => {
 
 }
 
+const excluirCobranca = async (req, res) => {
+  const {id_cobranca} = req.params;
+  const {id: id_usuario} = req.usuario;
+
+  try {
+    const verificarClienteId = await knex('cobrancas').where({id_cobranca}).first();
+    
+    const clienteId = verificarClienteId.cliente_id;
+    const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
+      console.log(verificarUsuarioLogado);
+      console.log(id_usuario);
+      if(verificarUsuarioLogado.usuario_id != id_usuario){
+          return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
+      }   
+  
+    
+    
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
+    
+}
+
 module.exports = {
   cadastrarCobranca,
   listarCobranca,
