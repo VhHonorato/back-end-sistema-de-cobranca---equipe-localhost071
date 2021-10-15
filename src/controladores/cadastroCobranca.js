@@ -190,5 +190,6 @@ const excluirCobranca = async (req, res) => {
 module.exports = {
   cadastrarCobranca,
   listarCobranca,
-  editarCobranca
+  editarCobranca,
+  excluirCobranca
 };
