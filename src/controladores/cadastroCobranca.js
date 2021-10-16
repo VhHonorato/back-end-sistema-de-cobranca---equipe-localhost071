@@ -8,11 +8,12 @@ const dayjs = require("dayjs");
 const cadastrarCobranca = async (req, res) => {
   const { descricao, status, valor, vencimento } = req.body;
   const { id } = req.params;
+  const {id: id_usuario} = req.usuario;
   try {
     await cadastroCobrancaSchema.validate(req.body);
 
     const selecionarCliente = await knex("clientes").where({ id }).first();
-
+    console.log(id);
     if (!selecionarCliente) {
       return res
         .status(400)
@@ -28,39 +29,15 @@ const cadastrarCobranca = async (req, res) => {
       valor: valorAjustado,
       vencimento,
     };
-
-  //     Date.prototype.withoutTime = function () {
-  //     var d = new Date(batatinha);
-  //     d.setHours(0, 0, 0, 0);
-  //     return d;
-  // }
-    // const data1 = new Date(vencimento);
-    // const data2 = new Date().toDateString();
-    // const validandoVencimeto = data1 < data2;
-    
-    // const validandoVencimeto = isAfter(utcToZonedTime(new Date(), 'America/Sao_Paulo'), parseISO(vencimento));
  
-   
-
-   
-         
-
-     
+    if(selecionarCliente.usuario_id !== id_usuario) {
+      return res.status(400).json('O usario não tem permissão para cadastrar uma cobrança nesse cliente.')
+    };
 
     if(dayjs().diff(vencimento, 'day') > 0){
       return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
     }
-    // let dataAtual = new Date();
-    // let dataVencimento = new Date(vencimento);
-    // const validandoVencimeto = dataAtual.valueOf() < dataVencimento.valueOf();
-    // console.log(dataAtual);
-    // console.log(dataVencimento);
-    // console.log(validandoVencimeto);
-    // if(dataAtual.valueOf() > dataVencimento.valueOf()) {
-
-    //   return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
-    // };
-   
+  
 
     const queryInserirCobranca = await knex("cobrancas").insert(
       cadastrandoCobranca
@@ -126,7 +103,7 @@ const editarCobranca = async (req, res) => {
    
      
       const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
-      console.log(verificarUsuarioLogado);
+      console.log(verificarUsuarioLogado.usuario_id);
       console.log(id_usuario);
       if(verificarUsuarioLogado.usuario_id != id_usuario){
           return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
