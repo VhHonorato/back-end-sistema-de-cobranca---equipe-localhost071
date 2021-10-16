@@ -65,11 +65,41 @@ try {
     }else{
         resposta = resposta.filter((cliente) => cliente.status == 'prevista')
     }
-   ;
 
-    console.log(resposta); 
+    return res.status(200).json(resposta);
 
+} catch (error) {
+    return res.status(400).json(error.message);
+}
+
+}
+
+const relatorioPagas = async (req, res) => {
+    const { id } = req.usuario;
+    const {paga} = req.query;
+try {
+    const listarClientes = await knex
+    .select("*")
+    .from("clientes")
+    .where({ usuario_id: id });
+    const promises = listarClientes.map(async (cliente) => {
+        const quantidadeCobrancasPagas = await knex('cobrancas')
+        .where({status: true, cliente_id: cliente.id});
+        console.log(cliente.id);
    
+        if(quantidadeCobrancasPagas){
+            cliente.status = 'paga'
+        } else {
+            return res.status(400).json('Não foram encontradas cobranças pagas.')
+        }
+       
+
+        return cliente; 
+    })
+    let resposta = await Promise.all(promises);
+    if(paga){
+        resposta = resposta.filter((cliente) => cliente.status == 'paga')
+    }
 
     return res.status(200).json(resposta);
 
@@ -81,5 +111,6 @@ try {
 
 module.exports = {
     relatorioEmDiaOuInadimplente,
-    relatorioPrevistaOuVencida
+    relatorioPrevistaOuVencida,
+    relatorioPagas
 }

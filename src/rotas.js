@@ -28,6 +28,7 @@ rotas.delete("/cobrancas/:id_cobranca", cadastrarCobranca.excluirCobranca);
 
 rotas.get("/relatorios/status", relatorios.relatorioEmDiaOuInadimplente);
 rotas.get("/relatorios/vencimentos", relatorios.relatorioPrevistaOuVencida);
+rotas.get("/relatorios/pagas", relatorios.relatorioPagas);
 
 
 module.exports = rotas;
