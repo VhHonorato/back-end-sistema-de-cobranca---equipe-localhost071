@@ -2,7 +2,8 @@ const knex = require("../conexao");
 const { cadastroCobrancaSchema, editarCobrancaSchema } = require("../validacoes/cadastroSchema");
 const { isAfter, isBefore, parseISO, isToday, isTomorrow } = require("date-fns");
 const {utcToZonedTime, zonedTimeToUtc} = require("date-fns-tz");
-
+const {verificarDatas} = require("../filtros/util");
+const dayjs = require("dayjs"); 
 
 const cadastrarCobranca = async (req, res) => {
   const { descricao, status, valor, vencimento } = req.body;
@@ -41,17 +42,12 @@ const cadastrarCobranca = async (req, res) => {
  
    
 
-    
-      const dataHoje = new Date();
-      const timeZone = 'America/Sao_Paulo';
-      const utcDataHoje = utcToZonedTime(dataHoje, timeZone);
-      const utcVencimento = utcToZonedTime(new Date(vencimento), timeZone);
-      console.log(utcDataHoje);
-      console.log(utcVencimento);
+   
+         
 
      
 
-    if(utcVencimento < utcDataHoje){
+    if(dayjs().diff(vencimento, 'day') > 0){
       return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
     }
     // let dataAtual = new Date();
@@ -165,38 +161,28 @@ const excluirCobranca = async (req, res) => {
   const {id: id_usuario} = req.usuario;
 
   try {
-    const verificarClienteId = await knex('cobrancas').where({id_cobranca}).first();
+    const cobranca = await knex('cobrancas').where({id_cobranca}).first();
     
-    if(!verificarClienteId){
+    if(!cobranca){
       return res.status(400).json('Cobrança não encontrada')
     }
 
-    const clienteId = verificarClienteId.cliente_id;
+    const clienteId = cobranca.cliente_id;
     const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
       
       if(verificarUsuarioLogado.usuario_id != id_usuario){
           return res.status(400).json('Usuario não tem permissão para excluir essa cobrança.');
       }   
   
-      const verificarCobranca = await knex('cobrancas').where({id_cobranca}).first();
     
-      if(verificarCobranca.status === true){
+      if(cobranca.status === true){
         return res.status(400).json('Não é possível excluir cobranças com status pago')
       }
 
-      // const dataVencimento = verificarCobranca.vencimento;
-      // const validandoVencimeto = isBefore(new Date(dataVencimento), utcToZonedTime(new Date(), 'America/Sao_Paulo'));
-      // console.log(new Date(dataVencimento), utcToZonedTime(new Date(), 'America/Sao_Paulo'));
-      
-      const utcVencimento = zonedTimeToUtc(new Date(vencimento), 'America/Sao_Paulo');
-      const dataHoje = new Date();
-      const timeZone = 'America/Sao_Paulo';
-      const utcDataHoje = utcToZonedTime(dataHoje, timeZone);
-      console.log(utcDataHoje);
-      console.log(utcVencimento);
 
-      if(utcVencimento < utcDataHoje){
-        return res.status(400).json('Não é possível excluir cobranças com data de vencimento anterior a data atual.')
+
+      if(dayjs().diff(cobranca.vencimento, 'day') > 0){
+        return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
       }
 
       const excluindoCobranca = await knex('cobrancas').del().where({id_cobranca});
