@@ -35,7 +35,7 @@ const cadastrarCobranca = async (req, res) => {
     };
 
     if(dayjs().diff(vencimento, 'day') > 0){
-      return res.status(400).json("Desculpe, não é possível deletar uma data de vencimento anterior a data atual.")
+      return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
     }
   
 
@@ -159,7 +159,7 @@ const excluirCobranca = async (req, res) => {
 
 
       if(dayjs().diff(cobranca.vencimento, 'day') > 0){
-        return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
+        return res.status(400).json("Desculpe, não é possível excluir uma cobrança com vencimento anterior a data atual.")
       }
 
       const excluindoCobranca = await knex('cobrancas').del().where({id_cobranca});
