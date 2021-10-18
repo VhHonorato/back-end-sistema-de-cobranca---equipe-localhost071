@@ -35,7 +35,7 @@ const cadastrarCobranca = async (req, res) => {
     };
 
     if(dayjs().diff(vencimento, 'day') > 0){
-      return res.status(400).json("Desculpe, não é possível cadastrar uma data de vencimento anterior a data atual.")
+      return res.status(400).json("Desculpe, não é possível deletar uma data de vencimento anterior a data atual.")
     }
   
 
@@ -109,13 +109,13 @@ const editarCobranca = async (req, res) => {
           return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
       }   
       
-  
+      const valorAjustado = valor * 100; 
       const editandoCobranca = { 
         cliente_id,
         descricao,
         status,
         vencimento,
-        valor
+        valor: valorAjustado
       }
 
     
