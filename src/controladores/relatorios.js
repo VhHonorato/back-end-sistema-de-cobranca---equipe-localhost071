@@ -39,9 +39,9 @@ try {
 
 }
 
-const relatorioPrevistaOuVencida = async (req, res) => {
+const relatorioVencida = async (req, res) => {
     const { id } = req.usuario;
-const {vencida} = req.query;
+
 try {
     const listarClientes = await knex
     .select("*")
@@ -50,23 +50,14 @@ try {
     const promises = listarClientes.map(async (cliente) => {
         const quantidadeCobrancasVencidas = await knex('cobrancas')
         .where({status: false, cliente_id: cliente.id})
-        .where('vencimento', '<', new Date())
-        .count('*').first();
-        if(quantidadeCobrancasVencidas.count > 0 ){
-            cliente.status = 'vencida'
-        } else {
-            cliente.status = 'prevista'
-        }
-       
-
-        return cliente; 
+        .where('vencimento', '<', new Date());
+        console.log(quantidadeCobrancasVencidas);
+    
+         return quantidadeCobrancasVencidas; 
+         
     })
     let resposta = await Promise.all(promises);
-    if(vencida){
-        resposta = resposta.filter((cliente) => cliente.status == 'vencida')
-    }else{
-        resposta = resposta.filter((cliente) => cliente.status == 'prevista')
-    }
+  
 
     return res.status(200).json(resposta);
 
@@ -76,9 +67,39 @@ try {
 
 }
 
+const relatorioPrevista= async (req, res) => {
+    const { id } = req.usuario;
+
+try {
+    const listarClientes = await knex
+    .select("*")
+    .from("clientes")
+    .where({ usuario_id: id });
+    const promises = listarClientes.map(async (cliente) => {
+        const quantidadeCobrancasVencidas = await knex('cobrancas')
+        .where({status: false, cliente_id: cliente.id})
+        .where('vencimento', '>', new Date());
+        console.log(quantidadeCobrancasVencidas);
+       
+       
+
+        return quantidadeCobrancasVencidas; 
+    })
+    let resposta = await Promise.all(promises);
+   
+
+    return res.status(200).json(resposta);
+
+} catch (error) {
+    return res.status(400).json(error.message);
+}
+
+}
+
+
 const relatorioPagas = async (req, res) => {
     const { id } = req.usuario;
-    const {paga} = req.query;
+    
 try {
     const listarClientes = await knex
     .select("*")
@@ -107,7 +128,7 @@ try {
         // console.log(quantidadeCobrancasPagas);
         
         if(quantidadeCobrancasPagas){
-            cliente.status = 'paga';
+            return quantidadeCobrancasPagas; 
        
         }else {
             return res.status(400).json('Não foram encontradas cobranças pagas.')
@@ -122,16 +143,11 @@ try {
         //     vencimento: quantidadeCobrancasPagas.vencimento,
         // }
 
-        return quantidadeCobrancasPagas; 
+       
     })
     let resposta = await Promise.all(promises);
     console.log(resposta);
     console.log(resposta.length);
-
-    if(paga){
-        resposta 
-        
-    }
     
    
     return res.status(200).json(resposta);
@@ -144,6 +160,7 @@ try {
 
 module.exports = {
     relatorioEmDiaOuInadimplente,
-    relatorioPrevistaOuVencida,
+    relatorioVencida,
+    relatorioPrevista,
     relatorioPagas
 }
