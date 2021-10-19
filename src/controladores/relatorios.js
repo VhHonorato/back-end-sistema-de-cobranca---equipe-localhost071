@@ -146,30 +146,22 @@ try {
             
             );
         
-        console.log(quantidadeCobrancasPagas);
+      
         
         
         return quantidadeCobrancasPagas; 
        
      
-        // const dadosCobranca = {
-        //     id_cobranca: quantidadeCobrancasPagas.id_cobranca,
-        //     cliente_id: quantidadeCobrancasPagas.cliente_id,
-        //     descricao: quantidadeCobrancasPagas.descricao,
-        //     status: quantidadeCobrancasPagas.status,
-        //     valor: quantidadeCobrancasPagas.valor,
-        //     vencimento: quantidadeCobrancasPagas.vencimento,
-        // }
 
        
     })
     let resposta = await Promise.all(promises);
-    // const cobrancasPagas = resposta [0];
-    // console.log(cobrancasPagas);
-    
-    
+    console.log(resposta);
+    if(!resposta){
+        return res.status(200).json([]);
+    }  
    
-    return res.status(200).json(resposta);
+    return res.status(200).json(resposta[0]);
 
 } catch (error) {
     return res.status(400).json(error.message);
