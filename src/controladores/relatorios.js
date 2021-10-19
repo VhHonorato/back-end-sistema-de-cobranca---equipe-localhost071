@@ -101,6 +101,7 @@ try {
         resposta = resposta.filter((cliente) => cliente.status == 'paga')
     }
 
+    // const total = resposta.length;
     return res.status(200).json(resposta);
 
 } catch (error) {

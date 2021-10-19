@@ -137,12 +137,13 @@ const listarClientes = async (req, res) => {
             'nome',
             'email',
             'telefone',
+            'cpf',
             knex.raw('sum (coalesce (cobrancas.valor, 0)) as valor_total_cobrancas_feitas'),
             knex.raw('sum (case when cobrancas.status = true then coalesce (cobrancas.valor, 0) else 0 end) as valor_total_cobrancas_recebidas')
             )
         .leftJoin('cobrancas', 'clientes.id', 'cobrancas.cliente_id')
         .where({usuario_id: id})
-        .groupBy('nome', 'telefone', 'email', 'clientes.id');
+        .groupBy('nome', 'telefone', 'email', 'clientes.id', 'cpf');
         if(!listarNomeClientes.length){
             return res.status(400).json('Desculpe, não foi possível exibir os clientes. Favor verificar as credênciais do usuário.')
         }
