@@ -48,20 +48,35 @@ try {
     .from("clientes")
     .where({ usuario_id: id });
     const promises = listarClientes.map(async (cliente) => {
-        const quantidadeCobrancasVencidas = await knex('cobrancas')
+        const quantidadeCobrancasVencidas = await knex .select("*")
+        .from('cobrancas')
+        .leftJoin('clientes', 'cobrancas.cliente_id', 'clientes.id')
         .where({status: false, cliente_id: cliente.id})
-        .where('vencimento', '<', new Date());
-        console.log(quantidadeCobrancasVencidas);
-    
+        .where('vencimento', '<', new Date())
+        .groupBy(
+            'nome',
+            'telefone',
+            'email', 
+            'clientes.id', 
+            'cpf',
+            'id_cobranca',
+            'cliente_id',
+            'descricao',
+            'status',
+            
+            );
+        // console.log(quantidadeCobrancasVencidas);
+        
          return quantidadeCobrancasVencidas; 
          
     })
     let resposta = await Promise.all(promises);
+    const cobrancasVencidas = resposta [0];
+  console.log(cobrancasVencidas.length);
   
-
-    return res.status(200).json(resposta);
-
-} catch (error) {
+    return res.status(200).json(cobrancasVencidas);
+      
+  } catch (error) {
     return res.status(400).json(error.message);
 }
 
@@ -85,10 +100,12 @@ try {
 
         return quantidadeCobrancasVencidas; 
     })
-    let resposta = await Promise.all(promises);
-   
 
-    return res.status(200).json(resposta);
+   
+    let resposta = await Promise.all(promises);
+    const cobrancasPrevistas = resposta[0];
+    console.log(cobrancasPrevistas.length)
+    return res.status(200).json(cobrancasPrevistas);
 
 } catch (error) {
     return res.status(400).json(error.message);
@@ -146,11 +163,12 @@ try {
        
     })
     let resposta = await Promise.all(promises);
-    console.log(resposta);
-    console.log(resposta.length);
+    const cobrancasPagas = resposta [0];
+    console.log(cobrancasPagas);
+    console.log(cobrancasPagas.length);
     
    
-    return res.status(200).json(resposta);
+    return res.status(200).json(cobrancasPagas);
 
 } catch (error) {
     return res.status(400).json(error.message);
