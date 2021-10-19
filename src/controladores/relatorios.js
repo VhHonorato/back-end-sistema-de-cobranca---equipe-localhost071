@@ -72,7 +72,9 @@ try {
     })
     let resposta = await Promise.all(promises);
     const cobrancasVencidas = resposta [0];
-  console.log(cobrancasVencidas.length);
+    if(!cobrancasVencidas){
+        return res.status(200).json([]);
+    }
   
     return res.status(200).json(cobrancasVencidas);
       
@@ -104,7 +106,10 @@ try {
    
     let resposta = await Promise.all(promises);
     const cobrancasPrevistas = resposta[0];
-    console.log(cobrancasPrevistas.length)
+    if(!cobrancasPrevistas){
+        return res.status(200).json([]);
+    }
+    
     return res.status(200).json(cobrancasPrevistas);
 
 } catch (error) {
@@ -159,9 +164,9 @@ try {
        
     })
     let resposta = await Promise.all(promises);
-    const cobrancasPagas = resposta [0];
+    // const cobrancasPagas = resposta [0];
     // console.log(cobrancasPagas);
-    console.log(resposta.length);
+    
     
    
     return res.status(200).json(resposta);
