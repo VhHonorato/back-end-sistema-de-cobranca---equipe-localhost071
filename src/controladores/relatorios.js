@@ -65,7 +65,7 @@ try {
             'status',
             
             );
-        // console.log(quantidadeCobrancasVencidas);
+        
         
          return quantidadeCobrancasVencidas; 
          
@@ -145,14 +145,9 @@ try {
             'status',
             
             );
-        
-      
-        
-        
+
         return quantidadeCobrancasPagas; 
        
-     
-
        
     })
     let resposta = await Promise.all(promises);

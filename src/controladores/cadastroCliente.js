@@ -145,7 +145,7 @@ const listarClientes = async (req, res) => {
         .where({usuario_id: id})
         .groupBy('nome', 'telefone', 'email', 'clientes.id', 'cpf');
         if(!listarNomeClientes.length){
-            return res.status(400).json('Desculpe, não foi possível exibir os clientes. Favor verificar as credênciais do usuário.')
+            return res.status(400).json('')
         }
 
         let listaStatusCliente = listarNomeClientes.map(async (cliente) => {
