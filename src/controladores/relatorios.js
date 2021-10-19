@@ -128,7 +128,6 @@ try {
         .from('cobrancas')
         .leftJoin('clientes', 'cobrancas.cliente_id', 'clientes.id')
         .where({status: true, cliente_id: cliente.id})
-        .where('vencimento', '<', new Date())
         .groupBy(
             'nome',
             'telefone',
@@ -142,15 +141,12 @@ try {
             
             );
         
-        // console.log(quantidadeCobrancasPagas);
+        console.log(quantidadeCobrancasPagas);
         
-        if(quantidadeCobrancasPagas){
-            return quantidadeCobrancasPagas; 
+        
+        return quantidadeCobrancasPagas; 
        
-        }else {
-            return res.status(400).json('Não foram encontradas cobranças pagas.')
-        }
-       
+     
         // const dadosCobranca = {
         //     id_cobranca: quantidadeCobrancasPagas.id_cobranca,
         //     cliente_id: quantidadeCobrancasPagas.cliente_id,
@@ -164,11 +160,11 @@ try {
     })
     let resposta = await Promise.all(promises);
     const cobrancasPagas = resposta [0];
-    console.log(cobrancasPagas);
-    console.log(cobrancasPagas.length);
+    // console.log(cobrancasPagas);
+    console.log(resposta.length);
     
    
-    return res.status(200).json(cobrancasPagas);
+    return res.status(200).json(resposta);
 
 } catch (error) {
     return res.status(400).json(error.message);
