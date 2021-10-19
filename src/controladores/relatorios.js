@@ -1,3 +1,4 @@
+const { Dayjs } = require("dayjs");
 const knex = require("../conexao");
 
 
@@ -19,6 +20,7 @@ try {
         } else {
             cliente.status = 'em dia'
         }
+        console.log(quantidadeCobrancasVencidas);
         return cliente 
     })
     let resposta = await Promise.all(promises);
@@ -83,25 +85,55 @@ try {
     .from("clientes")
     .where({ usuario_id: id });
     const promises = listarClientes.map(async (cliente) => {
-        const quantidadeCobrancasPagas = await knex('cobrancas')
-        .where({status: true, cliente_id: cliente.id});
-        console.log(cliente.id);
-   
+        const quantidadeCobrancasPagas = await knex
+        .select("*")
+        .from('cobrancas')
+        .leftJoin('clientes', 'cobrancas.cliente_id', 'clientes.id')
+        .where({status: true, cliente_id: cliente.id})
+        .where('vencimento', '<', new Date())
+        .groupBy(
+            'nome',
+            'telefone',
+            'email', 
+            'clientes.id', 
+            'cpf',
+            'id_cobranca',
+            'cliente_id',
+            'descricao',
+            'status',
+            
+            );
+        
+        // console.log(quantidadeCobrancasPagas);
+        
         if(quantidadeCobrancasPagas){
-            cliente.status = 'paga'
-        } else {
+            cliente.status = 'paga';
+       
+        }else {
             return res.status(400).json('Não foram encontradas cobranças pagas.')
         }
        
+        // const dadosCobranca = {
+        //     id_cobranca: quantidadeCobrancasPagas.id_cobranca,
+        //     cliente_id: quantidadeCobrancasPagas.cliente_id,
+        //     descricao: quantidadeCobrancasPagas.descricao,
+        //     status: quantidadeCobrancasPagas.status,
+        //     valor: quantidadeCobrancasPagas.valor,
+        //     vencimento: quantidadeCobrancasPagas.vencimento,
+        // }
 
-        return cliente; 
+        return quantidadeCobrancasPagas; 
     })
     let resposta = await Promise.all(promises);
-    if(paga){
-        resposta = resposta.filter((cliente) => cliente.status == 'paga')
-    }
+    console.log(resposta);
+    console.log(resposta.length);
 
-    // const total = resposta.length;
+    if(paga){
+        resposta 
+        
+    }
+    
+   
     return res.status(200).json(resposta);
 
 } catch (error) {
