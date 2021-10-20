@@ -1,4 +1,3 @@
-const { Dayjs } = require("dayjs");
 const knex = require("../conexao");
 
 
@@ -20,7 +19,7 @@ try {
         } else {
             cliente.status = 'em dia'
         }
-        console.log(quantidadeCobrancasVencidas);
+       
         return cliente 
     })
     let resposta = await Promise.all(promises);
@@ -96,10 +95,7 @@ try {
         const quantidadeCobrancasVencidas = await knex('cobrancas')
         .where({status: false, cliente_id: cliente.id})
         .where('vencimento', '>', new Date());
-        console.log(quantidadeCobrancasVencidas);
        
-       
-
         return quantidadeCobrancasVencidas; 
     })
 
@@ -151,7 +147,7 @@ try {
        
     })
     let resposta = await Promise.all(promises);
-    console.log(resposta);
+   
     if(!resposta){
         return res.status(200).json([]);
     }  

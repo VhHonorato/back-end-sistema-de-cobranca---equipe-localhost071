@@ -26,7 +26,7 @@ const cadastrarCliente = async (req, res) => {
         };
 
         const seExisteCpf = await knex('clientes').where({cpf}).first();
-        console.log(seExisteCpf);
+       
         if(seExisteCpf){
             return res.status(400).json('O CPF informado já foi cadastrado.')
         };
@@ -174,7 +174,7 @@ const detalharCliente = async (req, res) => {
     const { id } = req.params;
     try {
       const seExisteId = await knex("clientes").where({ id }).first();
-      console.log(seExisteId);
+     
       if (!seExisteId) {
         return res.status(404).json("Cliente não encontrado.");
       }

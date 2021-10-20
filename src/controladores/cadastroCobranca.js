@@ -1,8 +1,5 @@
 const knex = require("../conexao");
 const { cadastroCobrancaSchema, editarCobrancaSchema } = require("../validacoes/cadastroSchema");
-const { isAfter, isBefore, parseISO, isToday, isTomorrow } = require("date-fns");
-const {utcToZonedTime, zonedTimeToUtc} = require("date-fns-tz");
-const {verificarDatas} = require("../filtros/util");
 const dayjs = require("dayjs"); 
 
 const cadastrarCobranca = async (req, res) => {
@@ -13,7 +10,7 @@ const cadastrarCobranca = async (req, res) => {
     await cadastroCobrancaSchema.validate(req.body);
 
     const selecionarCliente = await knex("clientes").where({ id }).first();
-    console.log(id);
+   
     if (!selecionarCliente) {
       return res
         .status(400)
@@ -103,8 +100,7 @@ const editarCobranca = async (req, res) => {
    
      
       const verificarUsuarioLogado = await knex('clientes').where({id:clienteId}).first();
-      console.log(verificarUsuarioLogado.usuario_id);
-      console.log(id_usuario);
+      
       if(verificarUsuarioLogado.usuario_id != id_usuario){
           return res.status(400).json('Usuario não tem permissão para editar essa cobrança.');
       }   
