@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/status-conclu%C3%ADdo-brightgreen" alt="Status do Projeto: Concluído">
-  <img src="https://img.shields.io/badge/license-MIT-blue" alt="Licença MIT">
+ 
 </p>
 
 ## 📖 Sobre o Projeto
@@ -119,6 +119,4 @@ Abaixo estão as principais rotas da API. Todas as rotas, exceto `/login` e `/us
 
 ---
 
-## 📜 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
