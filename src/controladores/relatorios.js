@@ -160,6 +160,16 @@ try {
 
 }
 
+// CÓDIGO FEIO PARA TESTAR O SONARQUBE
+var senha_secreta = "admin123"; // Smell: Senha exposta e var (antigo)
+if (true) {                     // Smell: Condicional inútil
+    console.log("Teste");       // Smell: Console log não deve ir pra produção
+}
+function soma(a, b) {
+    return a + b;
+    return a - b;               // Smell: Código inalcançável (Unreachable code)
+}
+
 module.exports = {
     relatorioEmDiaOuInadimplente,
     relatorioVencida,
